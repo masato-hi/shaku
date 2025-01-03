@@ -5,7 +5,7 @@ use shaku::{module, Component, HasComponent, HasProvider, Interface, Provider};
 use shaku_axum::{Inject, InjectProvided};
 
 trait MyComponent: Interface {}
-trait MyProvider {}
+trait MyProvider: Send {}
 
 #[derive(Component)]
 #[shaku(interface = MyComponent)]
@@ -34,4 +34,6 @@ async fn index(
 }
 
 #[test]
-fn compiles_ok() {}
+fn compiles_ok() {
+    let _ = axum::Router::new().route("/", axum::routing::get(index));
+}
